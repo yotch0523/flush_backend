@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace flush_backend.Controllers;
+namespace Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]

@@ -1,4 +1,4 @@
-namespace flush_backend;
+namespace Web;
 
 public class WeatherForecast
 {
