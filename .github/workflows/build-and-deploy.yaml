@@ -50,12 +50,12 @@ jobs:
           password: ${{ steps.acrtoken.outputs.token }}
 
       - name: Build and push container image to registry
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
+          context: ./
           push: true
           tags: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
           file: ./Dockerfile
-          context: ./
 
   deploy:
     runs-on: ubuntu-latest
