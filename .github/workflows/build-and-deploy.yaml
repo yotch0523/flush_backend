@@ -1,8 +1,8 @@
-name: Trigger auto deployment for aca-sample
+name: Trigger auto deployment for aca
 
 on:
   push:
-    branches: [main]
+    branches: [staging]
 
   # Allow mannually trigger
   workflow_dispatch:
