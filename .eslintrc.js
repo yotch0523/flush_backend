@@ -10,6 +10,8 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
+    'prettier',
+    'prettier/@typescript-eslint',
   ],
   root: true,
   env: {
@@ -48,7 +50,7 @@ module.exports = {
     'multiline-ternary': 0,
     'key-spacing': ['error'],
     'object-curly-spacing': ['error', 'always'],
-    semi: ['error', 'never'],
+    semi: ['error', 'never', { beforeStatementContinuationChars: 'never' }],
     'no-multiple-empty-lines': [
       'error',
       {
