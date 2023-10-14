@@ -50,7 +50,7 @@ module.exports = {
     'multiline-ternary': 0,
     'key-spacing': ['error'],
     'object-curly-spacing': ['error', 'always'],
-    semi: ['error', 'never', { beforeStatementContinuationChars: 'never' }],
+    semi: ['error', 'never'],
     'no-multiple-empty-lines': [
       'error',
       {
