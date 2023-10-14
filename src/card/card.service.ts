@@ -1,14 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { Card } from '~/card/core/entity/card.entity'
-import { ICardRepository } from './core/entity/card.repository.interface'
-import { ICardDto } from './core/dto/card.dto'
 import { ConstantToken } from './card.di.constants'
+import { ICardDto } from './core/dto/card.dto'
+import { ICardRepository } from './core/entity/card.repository.interface'
 
 @Injectable()
 export class CardService {
   constructor(
     @Inject(ConstantToken.REPOSITORY)
-    private readonly cardRepository: ICardRepository
+    private readonly cardRepository: ICardRepository,
   ) {}
 
   async get(userId: string): Promise<ICardDto[]> {

@@ -1,3 +1,3 @@
 export enum ConstantToken {
-  REPOSITORY = 'repository'
+  REPOSITORY = 'repository',
 }

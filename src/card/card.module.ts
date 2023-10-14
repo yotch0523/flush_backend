@@ -1,24 +1,19 @@
-import { AzureCosmosDbModule } from '@nestjs/azure-database'
-import { Module } from '@nestjs/common';
-import { CardController } from '~/card/card.controller';
-import { Card } from '~/card/core/entity/card.entity'
-import { CardService } from '~/card/card.service';
-import { AppModule } from '~/app.module';
+import { forwardRef, Module } from '@nestjs/common'
+import { AppModule } from '~/app.module'
+import { CardController } from '~/card/card.controller'
 import { ConstantToken } from '~/card/card.di.constants'
-import { CardRepository } from './core/infra/card.repository.cosmosdb';
+import { CardService } from '~/card/card.service'
+import { CardRepository } from './core/infra/card.repository.cosmosdb'
 
 @Module({
-  imports: [
-    AppModule,
-    AzureCosmosDbModule.forFeature([{ dto: Card }]),
-  ],
+  imports: [forwardRef(() => AppModule)],
   controllers: [CardController],
   providers: [
     CardService,
     {
       provide: ConstantToken.REPOSITORY,
       useClass: CardRepository,
-    }
+    },
   ],
 })
 export class CardModule {}

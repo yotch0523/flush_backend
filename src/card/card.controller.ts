@@ -1,14 +1,17 @@
-import { Param, Controller, Get } from '@nestjs/common'
-import { Card } from '~/card/core/entity/card.entity'
+import { Controller, Get, Param } from '@nestjs/common'
 import { CardService } from '~/card/card.service'
-import { ICardDto } from './core/dto/card.dto';
+import { ICardDto } from './core/dto/card.dto'
 
-@Controller()
+type GetParams = {
+  userId: string
+}
+
+@Controller('cards')
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
   @Get(':userId')
-  async get(@Param('userId') params): Promise<ICardDto[]> {
-    return await this.cardService.get(params.userId);
+  async get(@Param() params: GetParams): Promise<ICardDto[]> {
+    return await this.cardService.get(params.userId)
   }
 }
