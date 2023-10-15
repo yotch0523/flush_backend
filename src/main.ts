@@ -6,7 +6,7 @@ import helmet from 'helmet'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  appInsights.setup()
+  appInsights.setup(process.env.APPLICATIONINSIGHTS_CONNECTION_STRING)
   appInsights.start()
   // appInsights.defaultClient.config.samplingPercentage = 33
   appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = 'flush-api'
