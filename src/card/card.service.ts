@@ -1,5 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
+import { convertToTimeZone } from 'date-fns-timezone'
+import ULID from 'ulid'
 import { ConstantToken } from './card.di.constants'
+import { ICreateCardDto } from './core/dto/card.create.dto'
 import { ICardDto } from './core/dto/card.dto'
 import { ICardRepository } from './core/entity/card.repository.interface'
 
@@ -23,5 +26,19 @@ export class CardService {
         updatedAt: entity.updatedAt,
       }
     })
+  }
+
+  async create(createDto: ICreateCardDto): Promise<string | null> {
+    const now = convertToTimeZone(new Date(), { timeZone: process.env.TIMEZONE ?? 'Asia/Tokyo' })
+    const dto: ICardDto = {
+      id: ULID.ulid(),
+      userId: createDto.userId,
+      title: createDto.title,
+      thumbnail: createDto.thumbnail,
+      description: createDto.description,
+      createdAt: now,
+      updatedAt: now,
+    }
+    return await this.cardRepository.create(dto)
   }
 }
