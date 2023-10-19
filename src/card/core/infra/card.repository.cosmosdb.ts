@@ -1,7 +1,8 @@
 import { Container, CosmosClient, Database } from '@azure/cosmos'
-import { Get, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { Card } from '~/card/core/entity/card.entity'
 import { ICardRepository } from '~/card/core/entity/card.repository.interface'
+import { ICardDto } from '../dto/card.dto'
 
 const containerName = 'cards'
 
@@ -14,7 +15,6 @@ export class CardRepository implements ICardRepository {
     this.container = this.database.container(containerName)
   }
 
-  @Get('cards')
   async get(partitionKey: string): Promise<Card[]> {
     const query = 'select * from c'
 
@@ -30,5 +30,12 @@ export class CardRepository implements ICardRepository {
       })
       .fetchAll()
     return resources
+  }
+
+  async create(dto: ICardDto): Promise<string | null> {
+    const entity = new Card(dto)
+    const { resource } = await this.container.items.create(dto)
+
+    return resource?.id ?? null
   }
 }
