@@ -1,5 +1,5 @@
 import { CosmosDateTime } from '@nestjs/azure-database'
-import { ICardDto } from '../dto/card.dto'
+import { ICardDto } from '~/card/core/dto/card.dto'
 
 export class Card {
   id: string
