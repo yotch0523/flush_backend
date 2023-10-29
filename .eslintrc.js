@@ -9,9 +9,9 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:prettier/recommended',
+    // 'plugin:prettier/recommended',
     'prettier',
-    'prettier/@typescript-eslint',
+    // 'prettier/@typescript-eslint',
   ],
   root: true,
   env: {
@@ -19,12 +19,7 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: ['.eslintrc.js'],
-  plugins: [
-    'eslint-plugin-import',
-    'eslint-plugin-prefer-arrow',
-    '@typescript-eslint',
-    'no-relative-import-paths',
-  ],
+  plugins: ['eslint-plugin-prefer-arrow', '@typescript-eslint', 'no-relative-import-paths'],
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
     'space-before-function-paren': 0,
@@ -82,7 +77,7 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-duplicate-imports': ['error'],
+    // '@typescript-eslint/no-duplicate-imports': ['error'],
     '@typescript-eslint/no-explicit-any': 'off',
   },
-};
+}
