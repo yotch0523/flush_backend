@@ -13,8 +13,8 @@ export class CardService {
     private readonly cardRepository: ICardRepository,
   ) {}
 
-  async get(userId: string): Promise<ICardDto[]> {
-    const cards = await this.cardRepository.get(userId)
+  async findAll(userId: string, itemCount: number): Promise<ICardDto[]> {
+    const cards = await this.cardRepository.findAll(userId, itemCount)
     return cards.map<ICardDto>((entity) => {
       return {
         id: entity.id,

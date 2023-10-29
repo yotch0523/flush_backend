@@ -13,6 +13,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule)
 
+  // app.useGlobalInterceptors(new RequestInterceptor()) OFF
   app.use(helmet())
   app.use(bodyParser.json({ limit: '50mb' }))
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
