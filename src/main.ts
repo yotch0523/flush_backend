@@ -12,9 +12,8 @@ async function bootstrap() {
   appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = 'flush-api'
 
   const app = await NestFactory.create(AppModule)
-
   app.enableCors({
-    origin: process.env.ALLOW_ORIGIN,
+    origin: process.env.ALLOW_ORIGINS?.split(','),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   })
@@ -23,7 +22,6 @@ async function bootstrap() {
   app.use(helmet())
   app.use(bodyParser.json({ limit: '50mb' }))
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-  app.enableCors()
 
   const config = new DocumentBuilder()
     .setTitle('My Swagger')
