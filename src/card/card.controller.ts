@@ -26,7 +26,7 @@ export class CardController {
         exception: new HttpException(
           {
             status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'failed find cards',
+            error: 'failed to get cards',
           },
           HttpStatus.INTERNAL_SERVER_ERROR,
           { cause: error },
@@ -38,7 +38,21 @@ export class CardController {
 
   @Post('/create')
   async create(@Body() createDto: ICreateCardDto): Promise<string | null> {
-    if (!createDto.userId) throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED)
-    return await this.cardService.create(createDto)
+    try {
+      if (!createDto.userId) throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED)
+      return await this.cardService.create(createDto)
+    } catch (error) {
+      this.telemetryClient.trackException({
+        exception: new HttpException(
+          {
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: 'failed to create card',
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          { cause: error },
+        ),
+      })
+      return null
+    }
   }
 }
