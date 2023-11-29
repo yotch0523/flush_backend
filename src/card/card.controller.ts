@@ -20,7 +20,14 @@ export class CardController {
   async findAll(@Req() request: Request, @Body('itemCount') itemCount: number): Promise<ICardDto[]> {
     try {
       const userId = request.headers['x-user-id'] as string
-      return await this.cardService.findAll(userId, itemCount)
+      const cards = await this.cardService.findAll(userId, itemCount)
+      this.telemetryClient.trackEvent({
+        name: `cards from cosmosdb id: ${userId}`,
+        measurements: {
+          cards: cards.length,
+        },
+      })
+      return cards
     } catch (error) {
       this.telemetryClient.trackException({
         exception: new HttpException(
