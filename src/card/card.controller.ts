@@ -29,16 +29,21 @@ export class CardController {
       })
       return cards
     } catch (error) {
-      this.telemetryClient.trackException({
-        exception: new HttpException(
-          {
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'failed to get cards',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          { cause: error },
-        ),
-      })
+      if (error instanceof Error) {
+        console.error(error.message)
+        this.telemetryClient.trackException({
+          exception: new HttpException(
+            {
+              status: HttpStatus.INTERNAL_SERVER_ERROR,
+              error: error.message,
+            },
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: error },
+          ),
+        })
+      } else {
+        console.error(error)
+      }
       return []
     }
   }
