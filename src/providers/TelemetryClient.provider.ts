@@ -1,11 +1,11 @@
 import { Provider } from '@nestjs/common'
-import appInsights from 'applicationinsights'
+import { defaultClient } from 'applicationinsights'
 
 export const TelemetryClientProvider: Provider = {
   provide: 'TelemetryClient',
   useFactory: () => {
     try {
-      return new appInsights.TelemetryClient()
+      return defaultClient
     } catch (error) {
       console.error(error)
     }
