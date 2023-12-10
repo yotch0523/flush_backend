@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { convertToTimeZone } from 'date-fns-timezone'
 import { ulid } from 'ulid'
 import { ConstantToken } from './card.di.constants'
-import { ICreateCardDto } from './core/dto/card.create.dto'
-import { ICardDto } from './core/dto/card.dto'
+import { CreateCardDto, GetCardDto } from './core/dto/card.dto'
 import { ICardRepository } from './core/entity/card.repository.interface'
 
 @Injectable()
@@ -13,13 +12,16 @@ export class CardService {
     private readonly cardRepository: ICardRepository,
   ) {}
 
-  async findAll(userId: string, itemCount: number): Promise<ICardDto[]> {
+  async findAll(userId: string, itemCount: number): Promise<GetCardDto[]> {
     const cards = await this.cardRepository.findAll(userId, itemCount)
-    return cards.map<ICardDto>((entity) => {
+    return cards.map<GetCardDto>((entity) => {
       return {
         id: entity.id,
         userId: entity.userId,
         title: entity.title,
+        cardCode: entity.cardCode,
+        question: entity.question,
+        answer: entity.answer,
         tags: entity.tags ?? [],
         thumbnail: entity.thumbnail,
         description: entity.description,
@@ -29,12 +31,15 @@ export class CardService {
     })
   }
 
-  async create(createDto: ICreateCardDto): Promise<string | null> {
+  async create(userId: string, createDto: CreateCardDto): Promise<string> {
     const now = convertToTimeZone(new Date(), { timeZone: process.env.TIMEZONE ?? 'Asia/Tokyo' })
-    const dto: ICardDto = {
+    const dto: GetCardDto = {
       id: ulid(),
-      userId: createDto.userId,
+      userId: userId,
       title: createDto.title,
+      cardCode: createDto.cardCode,
+      question: createDto.question,
+      answer: createDto.answer,
       tags: [],
       thumbnail: createDto.thumbnail,
       description: createDto.description,
