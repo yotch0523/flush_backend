@@ -2,8 +2,7 @@ import { Body, Controller, HttpException, HttpStatus, Inject, Post, Req } from '
 import { ApiResponse } from '@nestjs/swagger'
 import { TelemetryClient } from 'applicationinsights'
 import { CardService } from '~/card/card.service'
-import { ICreateCardDto } from './core/dto/card.create.dto'
-import { ICardDto } from './core/dto/card.dto'
+import { CreateCardDto, CreateCardResponseDto, GetCardDto } from './core/dto/card.dto'
 
 @Controller('cards')
 export class CardController {
@@ -17,7 +16,7 @@ export class CardController {
     status: 200,
     description: 'got cards successfully',
   })
-  async findAll(@Req() request: Request, @Body('itemCount') itemCount: number): Promise<ICardDto[]> {
+  async findAll(@Req() request: Request, @Body('itemCount') itemCount: number): Promise<GetCardDto[]> {
     try {
       const userId = request.headers['x-user-id'] as string
       const cards = await this.cardService.findAll(userId, itemCount)
@@ -43,28 +42,49 @@ export class CardController {
         })
       } else {
         console.error(error)
+        this.telemetryClient.trackException({
+          exception: new HttpException(
+            {
+              status: HttpStatus.INTERNAL_SERVER_ERROR,
+              error: typeof error,
+            },
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            { cause: error },
+          ),
+        })
       }
       return []
     }
   }
 
   @Post('/create')
-  async create(@Body() createDto: ICreateCardDto): Promise<string | null> {
+  @ApiResponse({
+    status: 201,
+    description: 'Successful operation',
+    type: () => CreateCardResponseDto,
+  })
+  async create(@Req() request: Request, @Body() createDto: CreateCardDto): Promise<CreateCardResponseDto> {
     try {
-      if (!createDto.userId) throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED)
-      return await this.cardService.create(createDto)
+      const userId = request.headers['x-user-id'] as string
+      if (!userId) throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED)
+      const id = await this.cardService.create(userId, createDto)
+      return { id }
     } catch (error) {
+      console.error(error)
+      if (error instanceof HttpException) throw error
+
+      const exception = new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'failed to create card',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
+      )
       this.telemetryClient.trackException({
-        exception: new HttpException(
-          {
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'failed to create card',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          { cause: error },
-        ),
+        exception,
       })
-      return null
+      throw exception
     }
   }
 }
