@@ -1,7 +1,7 @@
-import { ICardDto } from '~/card/core/dto/card.dto'
-import { Card } from '~/card/core/entity/card.entity'
+import { GetCardDto } from '~/card/core/dto/card.dto'
+import { CardEntity } from '~/card/core/entity/card.entity'
 
 export interface ICardRepository {
-  findAll(userId: string, itemCount?: number): Promise<Card[]>
-  create(dto: ICardDto): Promise<string | null>
+  findAll(userId: string, itemCount?: number): Promise<CardEntity[]>
+  create(dto: GetCardDto): Promise<string>
 }

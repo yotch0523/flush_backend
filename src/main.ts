@@ -6,18 +6,21 @@ import helmet from 'helmet'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  appInsights.setup(process.env.APPLICATIONINSIGHTS_CONNECTION_STRING)
-  appInsights.start()
+  appInsights.setup(process.env.APPLICATIONINSIGHTS_CONNECTION_STRING).start()
   // appInsights.defaultClient.config.samplingPercentage = 33
   appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = 'flush-api'
 
   const app = await NestFactory.create(AppModule)
+  app.enableCors({
+    origin: process.env.ALLOW_ORIGINS?.split(','),
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  })
 
   // app.useGlobalInterceptors(new RequestInterceptor()) OFF
   app.use(helmet())
   app.use(bodyParser.json({ limit: '50mb' }))
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-  app.enableCors()
 
   const config = new DocumentBuilder()
     .setTitle('My Swagger')
@@ -32,4 +35,4 @@ async function bootstrap() {
   const port = process.env.PORT || 3000
   await app.listen(port)
 }
-bootstrap()
+void bootstrap()

@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.1.13",
     "applicationinsights": "^2.9.0",
+    "class-validator": "^0.14.0",
     "date-fns": "^2.30.0",
     "date-fns-timezone": "^0.1.4",
     "helmet": "^7.0.0",
