@@ -26,6 +26,12 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Sign in with your Azure account
+
+```bash
+$ az login
+```
+
 ## Installation
 
 ```bash

@@ -29,31 +29,25 @@ export class CardController {
       return cards
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        const exception = new Error(error.message, { cause: error })
         this.telemetryClient.trackException({
-          exception: new HttpException(
-            {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
-              error: error.message,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: error },
-          ),
+          exception,
         })
-      } else {
-        console.error(error)
-        this.telemetryClient.trackException({
-          exception: new HttpException(
-            {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
-              error: typeof error,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            { cause: error },
-          ),
-        })
+        throw exception
       }
-      return []
+
+      const exception = new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: JSON.stringify(error),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
+      )
+      this.telemetryClient.trackException({
+        exception,
+      })
+      throw exception
     }
   }
 
