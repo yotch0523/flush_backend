@@ -32,12 +32,6 @@
 $ yarn install
 ```
 
-## Sign in with your Azure account
-
-```bash
-$ az login
-```
-
 ## Running the app
 
 ```bash
